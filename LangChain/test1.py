@@ -10,10 +10,10 @@ print(deepseek_model.invoke("你是谁?").content)
 
 # 定义模型模拟器,init也就是初始化的意思
 config_model = init_chat_model(temperature = 0.3)
-messages = [
-    SystemMessage(content = "请补全一段故事,20字以内"),
-    HumanMessage(content = "一只猫正在__?")
-]
+# messages = [
+#     SystemMessage(content = "请补全一段故事,20字以内"),
+#     HumanMessage(content = "一只猫正在__?")
+# ]
 # # .invoke()的config参数才真正意义商定义了模型
 # config_model.invoke(input = messages,config={"configurable":{"model":"deepseek-flash"}})
 print(config_model.invoke(input = messages,
