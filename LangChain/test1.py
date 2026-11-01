@@ -9,7 +9,7 @@ deepseek_model = init_chat_model("deepseek-flash",
 print(deepseek_model.invoke("你是谁?").content)
 
 # 定义模型模拟器,init也就是初始化的意思
-config_model = init_chat_model(temperature = 0.3)
+config_model = init_chat_model(temperature = 0.3)a
 messages = [
     SystemMessage(content = "请补全一段故事,20字以内"),
     HumanMessage(content = "一只猫正在__?")
