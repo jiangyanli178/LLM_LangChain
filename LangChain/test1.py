@@ -6,7 +6,7 @@ load_dotenv("../.env")
 deepseek_model = init_chat_model("deepseek-flash",
                                  model_provider="deepseek",
                                  temperature = 0.3)
-print(deepseek_model.invoke("你是谁?").content)
+print(deepseek_model.invoke("你是谁?").content)q
 
 # 定义模型模拟器,init也就是初始化的意思
 config_model = init_chat_model(temperature = 0.3)q
