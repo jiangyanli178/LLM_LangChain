@@ -45,4 +45,25 @@ add_test_four_tool = StructuredTool.from_function(
 )
 print(add_test_four_tool.invoke({"a": 1, "b": 2}))
 
+#如果还需要返回过程
+def add_test_four(a: int, b: int) -> tuple[str, list[int]]:
+    nums = [a,b]
+    content = f"{nums}两数相加和为{a+b}"
+    return content, nums
+add_test_four_tool = StructuredTool.from_function(
+    func = add_test_four,
+    name="ADD",
+    input_schema = AddInput,
+    description= "两数之和",
+    response_format= "content_and_artifact"  #设置工具调用返回的结果格式,这里是把结果和过程分开
+)
+print(add_test_four_tool.invoke({"a": 1, "b": 2}))
+#设置了格式为过程结果分开后,过后需要使用大模型调用方式才能看见过程
+print(add_test_four_tool.invoke({
+    "name": "ADD",
+    "args": {"a": 1, "b": 2},
+    "type": "tool_call",
+    "id": "111"
+}))
+
 #
