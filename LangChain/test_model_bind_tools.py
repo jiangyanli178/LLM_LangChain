@@ -1,6 +1,10 @@
+from langchain.chat_models import init_chat_model
 from langchain_core.tools import tool, StructuredTool
 from pydantic import BaseModel, Field
 from typing_extensions import Annotated
+
+from LangChain.test1 import deepseek_model
+
 
 #普通版本
 @tool
@@ -66,4 +70,15 @@ print(add_test_four_tool.invoke({
     "id": "111"
 }))
 
-#
+#解决了定义工具,然后需要绑定工具
+@tool(args_schema=AddInput)
+def add_test_five(a: int, b: int) -> int:
+    return a+b
+@tool
+def add_test_six(a: Annotated[int,...,"第一个整数"],
+                  b: Annotated[int,...,"第二个整数"]) -> int:
+    """两数相乘"""
+    return a*b
+deepseekModel = init_chat_model(model="deepseek-flash")
+deepseekModel_tools = deepseekModel.bind_tools(tools = [add_test_five, add_test_six])
+print(deepseekModel_tools.invoke("2+3和5*5分别等于多少"))#打印的其实是AIMessage,不是想要的答案
