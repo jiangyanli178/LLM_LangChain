@@ -1,15 +1,48 @@
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
+from pydantic import BaseModel, Field
 from typing_extensions import Annotated
 
+#普通版本
+@tool
+def add_test_one(a: int, b: int) -> int:
+    #方法描述 参数 返回值
+    """两数相加
+    """
+    return a+b
+print(add_test_one.invoke({"a": 1, "b": 2}))
 
 #添加参数的描述让LLM了解这个工具的参数是什么
 @tool
-def add_test_one(a:Annotated[int,...,"第一个整数"],
+def add_test_two(a:Annotated[int,...,"第一个整数"],
                  b:Annotated[int,...,"第二个整数"]) -> int :
-    """
-     两数之和
+    """两数之和
     """
     return a+b
+print(add_test_two.invoke({"a":1,"b":2}))
 
+#用pydantic中的BaseModel通过类来描述字符串文档
+class AddInput(BaseModel):
+    #对于字符串的描述
+    """两数之和
+    """
+    #对于参数的描述
+    a: int = Field(...,description="第一个整数")
+    b: int = Field(...,description="第二个整数")
+@tool(args_schema=AddInput)
+def add_test_three(a: int, b: int) -> int:
+    return a+b
+print(add_test_three.invoke({"a": 1, "b": 2}))
 
-print(add_test_one.invoke({"a":1,"b":2}))
+#以及用LangChain提供的类来定义工具使用StructuredTool
+#这里不需要再加@tool了
+def add_test_four(a: int, b: int) -> int:
+    return a+b
+add_test_four_tool = StructuredTool.from_function(
+    func = add_test_four,
+    name="ADD",
+    input_schema = AddInput,
+    description= "两数之和"
+)
+print(add_test_four_tool.invoke({"a": 1, "b": 2}))
+
+#
